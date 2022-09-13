@@ -39,8 +39,9 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v3.1.1
         with:
+          context: images/
           platforms: linux/amd64,linux/arm64
-          file: images/Dockerfile.2004
+          file: Dockerfile.2004
           push: true
           tags: ghcr.io/mxnet-dev/ubuntu:2004
 
@@ -69,7 +70,8 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v3.1.1
         with:
+          context: images/
           platforms: linux/amd64,linux/arm64
-          file: images/Dockerfile.2204
+          file: Dockerfile.2204
           push: true
           tags: ghcr.io/mxnet-dev/ubuntu:2204
