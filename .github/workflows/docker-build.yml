@@ -39,8 +39,8 @@ jobs:
         uses: docker/build-push-action@v3.1.1
         with:
           context: ./images
+          file: ./images/Dockerfile.2004
           platforms: linux/amd64,linux/arm64
-          file: Dockerfile.2004
           push: true
           tags: ghcr.io/mxnet-dev/ubuntu:2004
 
@@ -70,7 +70,7 @@ jobs:
         uses: docker/build-push-action@v3.1.1
         with:
           context: ./images
+          file: ./images/Dockerfile.2204
           platforms: linux/amd64,linux/arm64
-          file: Dockerfile.2204
           push: true
           tags: ghcr.io/mxnet-dev/ubuntu:2204
