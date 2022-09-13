@@ -12,6 +12,9 @@ on:
   schedule:
     - cron: '0 4 * * *'
 
+defaults:
+  run:
+    working-directory: /images
 
 jobs:
 
@@ -39,7 +42,6 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v3.1.1
         with:
-          context: images/
           platforms: linux/amd64,linux/arm64
           file: Dockerfile.2004
           push: true
@@ -70,7 +72,6 @@ jobs:
       - name: Build and Push
         uses: docker/build-push-action@v3.1.1
         with:
-          context: images/
           platforms: linux/amd64,linux/arm64
           file: Dockerfile.2204
           push: true
