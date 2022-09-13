@@ -8,7 +8,7 @@ COPY containerd-pin /etc/apt/preferences.d/
 RUN apt-get update && \
     DEBIAN_FRONTEND="noninteractive" apt-get install --yes ca-certificates
 COPY docker-archive-keyring.gpg /usr/share/keyrings/docker-archive-keyring.gpg
-COPY docker.list /etc/apt/sources.list.d/docker.list
+COPY 2004.docker.list /etc/apt/sources.list.d/docker.list
 
 # Install baseline packages
 # We use an old containerd.io because it contains a version of runc that works
