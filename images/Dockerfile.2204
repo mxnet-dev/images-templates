@@ -19,7 +19,6 @@ RUN apt-get update && \
       bash \
       build-essential \
       ca-certificates \
-      containerd.io \
       curl \
       docker-ce \
       docker-ce-cli \
