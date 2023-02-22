@@ -6,6 +6,7 @@ COPY containerd-pin /etc/apt/preferences.d/
 
 # Install the Docker apt repository
 RUN apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get upgrade --yes && \
     DEBIAN_FRONTEND="noninteractive" apt-get install --yes ca-certificates
 COPY docker-archive-keyring.gpg /usr/share/keyrings/docker-archive-keyring.gpg
 COPY 2004.docker.list /etc/apt/sources.list.d/docker.list
@@ -18,7 +19,7 @@ RUN apt-get update && \
       bash \
       build-essential \
       ca-certificates \
-      containerd.io=1.5.11-1 \
+      containerd.io \
       curl \
       docker-ce \
       docker-ce-cli \
