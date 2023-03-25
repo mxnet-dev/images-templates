@@ -71,6 +71,6 @@ jobs:
         with:
           context: ./images
           file: ./images/Dockerfile.2204
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: ghcr.io/mxnet-dev/ubuntu:2204
