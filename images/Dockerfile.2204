@@ -58,8 +58,11 @@ RUN useradd coder \
 
 USER coder
 
-# Install Homebrew, must be as a non-root user
-RUN curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh > /tmp/install.sh && \
-    /bin/bash /tmp/install.sh && \
-    rm /tmp/install.sh
-ENV PATH /home/linuxbrew/.linuxbrew/bin:${PATH}
+# Install Homebrew on amd64 only
+RUN if [ "$(uname -m)" = "x86_64" ]; then \
+        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh > /tmp/install.sh && \
+        /bin/bash /tmp/install.sh && \
+        rm /tmp/install.sh && \
+        echo 'PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >> ~/.bashrc && \
+        echo 'PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"' >> ~/.bashrc; \
+    fi
