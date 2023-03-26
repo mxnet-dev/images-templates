@@ -22,6 +22,21 @@
     {
       "matchDepTypes": ["action"],
       "addLabels": ["actions"]
+    },
+    {
+      "matchDepTypes": ["build"],
+      "matchPackageNames": ["DOCKER_COMPOSE_VERSION"],
+      "regexManagers": [
+        {
+          "fileMatch": ["(^|/)Dockerfile$"],
+          "matchStrings": [
+            "ARG DOCKER_COMPOSE_VERSION=(?<currentValue>\\S+)"
+          ],
+          "depNameTemplate": "docker-compose",
+          "datasourceTemplate": "github-releases",
+          "lookupNameTemplate": "docker/compose"
+        }
+      ]
     }
   ]
 }
