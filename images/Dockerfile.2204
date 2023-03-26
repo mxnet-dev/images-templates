@@ -1,5 +1,7 @@
 FROM ubuntu:22.04
 
+ARG DOCKER_COMPOSE_VERSION=2.16.0
+
 SHELL ["/bin/bash", "-c"]
 
 # Install the Docker apt repository
@@ -44,7 +46,7 @@ RUN apt-get update && \
 RUN systemctl enable docker
 
 # Add docker-compose
-RUN curl -L "https://github.com/docker/compose/releases/download/v2.17.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+RUN curl -L "https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
 
 # Add a user `coder` so that you're not developing as the `root` user
