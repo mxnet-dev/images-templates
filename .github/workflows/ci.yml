@@ -74,13 +74,13 @@ jobs:
     needs: [docker_build_test, terraform_validate]
     steps:
     - name: Remove labels
-      if: ${{ always() }}
+      if: ${{ needs.docker_build_test.result != 'skipped' || needs.terraform_validate.result != 'skipped' }}
       uses: actions-ecosystem/action-remove-labels@v1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         labels: "passing,not passing"
     - name: Add label
-      if: ${{ always() }}
+      if: ${{ needs.docker_build_test.result != 'skipped' || needs.terraform_validate.result != 'skipped' }}
       uses: actions-ecosystem/action-add-labels@v1
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
