@@ -19,7 +19,7 @@ jobs:
       terraform_changed: ${{ steps.filter.outputs.terraform }}
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Path filter
       uses: dorny/paths-filter@v2
@@ -37,7 +37,7 @@ jobs:
     if: needs.filter.outputs.docker_changed == 'true'
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
@@ -54,7 +54,7 @@ jobs:
     if: needs.filter.outputs.terraform_changed == 'true'
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
