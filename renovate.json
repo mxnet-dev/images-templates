@@ -12,7 +12,7 @@
       "automerge": true
     },
     {
-      "matchPackagePatterns": ["terraform"],
+      "matchManagers": ["terraform"],
       "addLabels": ["terraform"]
     },
     {
