@@ -16,7 +16,7 @@
       "addLabels": ["terraform"]
     },
     {
-      "matchDepTypes": ["actions"],
+      "matchDepTypes": ["action"],
       "addLabels": ["actions"]
     }
   ]
