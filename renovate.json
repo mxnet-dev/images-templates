@@ -12,6 +12,10 @@
       "automerge": true
     },
     {
+      "matchManagers": ["dockerfile"],
+      "addLabels": ["docker"]
+    },
+    {
       "matchManagers": ["terraform"],
       "addLabels": ["terraform"]
     },
