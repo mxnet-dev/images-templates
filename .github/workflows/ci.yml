@@ -40,7 +40,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      uses: docker/setup-buildx-action@v2
 
     - name: Build Dockerfile 2004
       run: docker build -t test-image-2004 -f images/Dockerfile.2004 .
