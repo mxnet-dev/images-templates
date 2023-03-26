@@ -15,6 +15,15 @@
       "depNameTemplate": "docker-compose",
       "datasourceTemplate": "github-releases",
       "lookupNameTemplate": "docker/compose"
+    },
+    {
+      "fileMatch": ["\\.github/workflows/.*\\.yml"],
+      "matchStrings": [
+        "terraform_version: (?<currentValue>\\S+)"
+      ],
+      "depNameTemplate": "hashicorp/terraform",
+      "datasourceTemplate": "github-releases",
+      "lookupNameTemplate": "hashicorp/terraform"
     }
   ],
   "packageRules": [
@@ -37,8 +46,7 @@
     {
       "matchDepTypes": ["build"],
       "matchPackageNames": ["docker-compose"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "addLabels": ["docker"]
     }
   ]
 }
