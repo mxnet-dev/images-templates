@@ -2,11 +2,9 @@ terraform {
   required_providers {
     coder = {
       source  = "coder/coder"
-      version = "0.6.12"
     }
     docker = {
       source  = "kreuzwerker/docker"
-      version = "~> 3.0.1"
     }
   }
 }
@@ -21,13 +19,23 @@ data "coder_workspace" "me" {
 }
 
 data "docker_registry_image" "image" {
-  name = "ghcr.io/mxnet-dev/${var.image_version}"
+  name = local.image_ref
 }
 
-resource "docker_image" "image" {
-  name          = "${trim(data.docker_registry_image.image.name, "1234567890:")}@${data.docker_registry_image.image.sha256_digest}"
-  pull_triggers = [data.docker_registry_image.image.sha256_digest]
-  keep_locally  = true
+locals {
+  image_ref      = "ghcr.io/mxnet-dev/${var.image_version}"
+  image_name     = "${trim(data.docker_registry_image.image.name, "1234567890:")}@${data.docker_registry_image.image.sha256_digest}"
+  startup_script = <<EOF
+    #!/bin/sh
+    %{ if var.dotfiles_uri != "" }coder dotfiles -y ${var.dotfiles_uri}%{ endif }
+    sudo rm ~/.config/coderv2/dotfiles/.bashrc
+    sudo rm ~/.bashrc
+    zsh
+    curl -fsSL https://code-server.dev/install.sh | sh
+    code-server --auth none --port 13337 &
+    # Start Docker
+    sudo dockerd &
+    EOF
 }
 
 variable "dotfiles_uri" {
@@ -52,6 +60,12 @@ variable "image_version" {
   }
 }
 
+resource "docker_image" "image" {
+  name          = local.image_name
+  pull_triggers = [data.docker_registry_image.image.sha256_digest]
+  keep_locally  = true
+}
+
 resource "coder_agent" "main" {
   env = {
     GIT_AUTHOR_NAME     = "${data.coder_workspace.me.owner}"
@@ -62,19 +76,15 @@ resource "coder_agent" "main" {
   arch           = data.coder_provisioner.me.arch
   os             = "linux"
   dir            = "/home/coder"
-  startup_script = <<EOF
-  #!/bin/sh
-  %{ if var.dotfiles_uri != "" }coder dotfiles -y ${var.dotfiles_uri}%{ endif }
-  curl -fsSL https://code-server.dev/install.sh | sh
-  code-server --auth none --port 13337 &
-  EOF
+  startup_script = local.startup_script
 }
 
 resource "coder_app" "code-server" {
-  agent_id = coder_agent.main.id
-  name     = "VSCode"
-  icon     = "/icon/code.svg"
-  url      = "http://localhost:13337/?folder=/home/coder"
+  agent_id     = coder_agent.main.id
+  slug         = "code-docker"
+  display_name = "VSCode"
+  icon         = "/icon/code.svg"
+  url          = "http://localhost:13337/?folder=/home/coder"
 }
 
 resource "docker_volume" "home_volume" {
@@ -87,6 +97,7 @@ resource "docker_container" "workspace" {
   name    = "coder-${data.coder_workspace.me.owner}-${lower(data.coder_workspace.me.name)}"
   dns     = ["1.1.1.1"]
   command = ["sh", "-c", replace(coder_agent.main.init_script, "127.0.0.1", "host.docker.internal")]
+  runtime = "sysbox-runc"
   env     = ["CODER_AGENT_TOKEN=${coder_agent.main.token}"]
   host {
     host  = "host.docker.internal"
@@ -126,6 +137,6 @@ resource "coder_metadata" "image_info" {
 
   item {
     key   = "image"
-    value = docker_image.image.name
+    value = local.image_ref
   }
 }
