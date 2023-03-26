@@ -8,7 +8,7 @@
   "labels": ["dependencies"],
   "regexManagers": [
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "fileMatch": ["(^|/)Dockerfile\\.([^/]+)$"],
       "matchStrings": [
         "ARG DOCKER_COMPOSE_VERSION=(?<currentValue>\\S+)"
       ],
