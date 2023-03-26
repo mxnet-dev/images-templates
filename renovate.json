@@ -5,10 +5,19 @@
   ],
   "reviewers": ["thehedgefrog"],
   "assignees": ["thehedgefrog"],
+  "labels": ["dependencies"],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor","patch"],
       "automerge": true
+    },
+    {
+      "matchPackagePatterns": ["terraform"],
+      "addLabels": ["terraform"]
+    },
+    {
+      "matchDepTypes": ["actions"],
+      "addLabels": ["actions"]
     }
   ]
 }
