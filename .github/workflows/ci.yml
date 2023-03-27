@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'images/Dockerfile*'
+      - 'images/**/Dockerfile*'
       - 'templates/**/*.tf'
       - '.github/workflows/ci.yml'
 
