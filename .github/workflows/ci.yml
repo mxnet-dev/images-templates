@@ -27,7 +27,7 @@ jobs:
       with:
         filters: |
           docker:
-            - 'images/Dockerfile*'
+            - 'images/**/Dockerfile*'
           terraform:
             - 'templates/**/*.tf'
 
@@ -42,11 +42,8 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Build Dockerfile 2004
-      run: docker build -t test-image-2004 -f images/Dockerfile.2004 .
-
     - name: Build Dockerfile 2204
-      run: docker build -t test-image-2204 -f images/Dockerfile.2204 .
+      run: docker build -t test-image-2204 -f images/ubuntu-2204/Dockerfile.2204 .
 
   terraform_validate:
     runs-on: ubuntu-latest
