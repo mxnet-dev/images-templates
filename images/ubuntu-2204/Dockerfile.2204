@@ -1,6 +1,7 @@
 FROM ubuntu:22.04
 
 ARG DOCKER_COMPOSE_VERSION=2.16.0
+ARG TARGETARCH
 
 SHELL ["/bin/bash", "-c"]
 
@@ -61,7 +62,7 @@ RUN useradd coder \
 USER coder
 
 # Install Homebrew on amd64 only
-RUN if [ "$(uname -m)" = "x86_64" ]; then \
+RUN if [ "${TARGETARCH}" = "amd64" ]; then \
         curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh > /tmp/install.sh && \
         /bin/bash /tmp/install.sh && \
         rm /tmp/install.sh && \
