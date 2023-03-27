@@ -75,7 +75,7 @@ jobs:
     name: Attach labels
     runs-on: ubuntu-latest
     needs: [docker_build_test, terraform_validate]
-    if: ${{ (needs.docker_build_test.result != 'skipped' || needs.terraform_validate.result != 'skipped') }}
+    if: ${{ (needs.docker_build_test.result != null || needs.terraform_validate.result != null) }}
     steps:
     - name: Remove labels
       uses: actions-ecosystem/action-remove-labels@v1
