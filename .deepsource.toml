@@ -7,4 +7,4 @@ name = "terraform"
 name = "docker"
 
   [analyzers.meta]
-  dockerfile_paths = ["/images/**/"]
+  dockerfile_paths = ["/images/ubuntu-2204/Dockerfile.2204"]
