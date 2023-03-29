@@ -70,27 +70,3 @@ jobs:
     - name: Validate Terraform configuration
       working-directory: templates
       run: terraform validate
-
-  label_pr:
-    name: Attach labels
-    runs-on: ubuntu-latest
-    if: ${{ (needs.filter.outputs.docker_changed == 'true' || needs.filter.outputs.terraform_changed == 'true') }}
-    steps:
-    - name: Wait for test jobs
-      uses: lewagon/wait-on-check-action@v0.2
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
-        check-name: 'Docker build test, Terraform validate'
-        wait-interval: 60
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Remove labels
-      uses: actions-ecosystem/action-remove-labels@v1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        labels: "passing,not passing"
-    - name: Add label
-      uses: actions-ecosystem/action-add-labels@v1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        labels: "${{ (needs.docker_build_test.result == 'success' && needs.terraform_validate.result != 'failure') || (needs.terraform_validate.result == 'success' && needs.docker_build_test.result != 'failure') && 'passing' || (needs.docker_build_test.result == 'failure' || needs.terraform_validate.result == 'failure') && 'not passing' || '' }}"
-
