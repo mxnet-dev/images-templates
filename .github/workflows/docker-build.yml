@@ -12,8 +12,8 @@ on:
 
 jobs:
 
-  ubuntu-2204-buildpush:
-    name: Ubuntu 22.04 Build and Push
+  ubuntu-buildpush:
+    name: Ubuntu Build and Push
     runs-on: ubuntu-latest
     steps:
 
@@ -37,7 +37,18 @@ jobs:
         uses: docker/build-push-action@v4.0.0
         with:
           context: ./images
-          file: ./images/ubuntu-2204/Dockerfile.2204
+          file: ./images/ubuntu/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/mxnet-dev/ubuntu:2204
+          tags: ghcr.io/mxnet-dev/ubuntu-dev:latest
+
+  delete-versions:
+    name: Delete old packages
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/delete-package-versions@v4
+        with:
+          package-name: 'ubuntu'
+          package-type: 'container'
+          min-versions-to-keep: 3
