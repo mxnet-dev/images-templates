@@ -39,8 +39,12 @@ jobs:
     if: needs.filter.outputs.docker_changed == 'true'
     strategy:
       matrix:
-        platform: [linux/amd64, linux/arm64]
-        targetarch: [amd64, arm64]
+        include:
+          - platform: linux/amd64
+            targetarch: amd64
+          - platform: linux/arm64
+            targetarch: arm64
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
