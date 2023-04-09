@@ -1,0 +1,71 @@
+FROM ubuntu:22.04
+
+ARG DOCKER_COMPOSE_VERSION=v2.17.2
+ARG TARGETARCH
+
+SHELL ["/bin/bash", "-c"]
+
+# Install the Docker apt repository
+RUN apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get upgrade --yes && \
+    DEBIAN_FRONTEND="noninteractive" apt-get install --yes ca-certificates
+RUN apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/docker-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+
+# Install baseline packages
+RUN apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get install --yes \
+      bash \
+      build-essential \
+      ca-certificates \
+      containerd.io \
+      curl \
+      docker-ce \
+      docker-ce-cli \
+      docker-compose-plugin \
+      htop \
+      locales \
+      man \
+      nano \
+      python3-dev \
+      python3 \
+      python3-pip \
+      software-properties-common \
+      sudo \
+      systemd \
+      systemd-sysv \
+      unzip \
+      vim \
+      wget \
+      zsh && \
+    # Install latest Git using their official PPA
+    add-apt-repository ppa:git-core/ppa && \
+    DEBIAN_FRONTEND="noninteractive" apt-get install --yes git
+
+# Enables Docker starting with systemd
+RUN systemctl enable docker
+
+# Add docker-compose
+RUN curl -L "https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+RUN chmod +x /usr/local/bin/docker-compose
+
+# Add a user `coder` so that you're not developing as the `root` user
+RUN useradd coder \
+      --create-home \
+      --shell=/bin/bash \
+      --groups=docker \
+      --uid=1000 \
+      --user-group && \
+    echo "coder ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers.d/nopasswd
+
+USER coder
+
+# Install Homebrew on amd64 only
+RUN if [ "${TARGETARCH}" = "amd64" ]; then \
+        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh > /tmp/install.sh && \
+        /bin/bash /tmp/install.sh && \
+        rm /tmp/install.sh && \
+        echo 'PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"' >> ~/.bashrc && \
+        echo 'PATH="/home/linuxbrew/.linuxbrew/sbin:$PATH"' >> ~/.bashrc; \
+    fi

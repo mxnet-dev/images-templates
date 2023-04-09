@@ -29,13 +29,12 @@ locals {
   image_name     = "${trim(data.docker_registry_image.image.name, "1234567890:")}@${data.docker_registry_image.image.sha256_digest}"
   startup_script = <<EOF
     #!/bin/sh
-    %{ if var.dotfiles_uri != "" }coder dotfiles -y ${var.dotfiles_uri}%{ endif }
+    %{if var.dotfiles_uri != ""}coder dotfiles -y ${var.dotfiles_uri}%{endif}
     sudo rm ~/.config/coderv2/dotfiles/.bashrc
     sudo rm ~/.bashrc
     zsh
     curl -fsSL https://code-server.dev/install.sh | sh
     code-server --auth none --port 13337 &
-    # Start Docker
     sudo dockerd &
     EOF
 }
@@ -54,11 +53,11 @@ variable "image_version" {
 
   EOF
 
-  default = "ubuntu:2204"
+  default = "ubuntu-dev"
 
   validation {
-    condition     = contains(["ubuntu:2004","ubuntu:2204"], var.image_version)
-    error_message = "Value must be ubuntu:2004, ubuntu:2204."
+    condition     = contains(["ubuntu-dev"], var.image_version)
+    error_message = "Value must be ubuntu-dev"
   }
 }
 
@@ -94,16 +93,16 @@ resource "docker_volume" "home_volume" {
 }
 
 resource "docker_container" "workspace" {
-  count   = data.coder_workspace.me.start_count
-  image   = docker_image.image.image_id
-  name    = "coder-${data.coder_workspace.me.owner}-${lower(data.coder_workspace.me.name)}"
-  dns     = ["1.1.1.1"]
-  command = ["sh", "-c", replace(coder_agent.main.init_script, "127.0.0.1", "host.docker.internal")]
-  runtime = "sysbox-runc"
-  env     = ["CODER_AGENT_TOKEN=${coder_agent.main.token}"]
+  count        = data.coder_workspace.me.start_count
+  image        = docker_image.image.image_id
+  name         = "coder-${data.coder_workspace.me.owner}-${lower(data.coder_workspace.me.name)}"
+  dns          = ["1.1.1.1"]
+  command      = ["sh", "-c", replace(coder_agent.main.init_script, "127.0.0.1", "host.docker.internal")]
+  runtime      = "sysbox-runc"
+  env          = ["CODER_AGENT_TOKEN=${coder_agent.main.token}"]
   host {
-    host  = "host.docker.internal"
-    ip    = "host-gateway"
+    host = "host.docker.internal"
+    ip   = "host-gateway"
   }
   volumes {
     container_path = "/home/coder/"
