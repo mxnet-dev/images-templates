@@ -32,7 +32,7 @@
       ],
       "depNameTemplate": "gotask",
       "datasourceTemplate": "github-releases",
-      "lookupNameTemplate": "gotask/task"
+      "lookupNameTemplate": "go-task/task"
     },
     {
       "fileMatch": ["\\.github/workflows/.*\\.yml"],
