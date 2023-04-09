@@ -8,13 +8,31 @@
   "labels": ["dependencies"],
   "regexManagers": [
     {
-      "fileMatch": ["(^|/)Dockerfile\\.([^/]+)$"],
+      "fileMatch": ["(^|/)Dockerfile(\\.([^/]+))?$"],
       "matchStrings": [
         "ARG DOCKER_COMPOSE_VERSION=(?<currentValue>\\S+)"
       ],
       "depNameTemplate": "docker-compose",
       "datasourceTemplate": "github-releases",
       "lookupNameTemplate": "docker/compose"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile(\\.([^/]+))?$"],
+      "matchStrings": [
+        "ARG GITHUB_CLI_VERSION=(?<currentValue>\\S+)"
+      ],
+      "depNameTemplate": "gh",
+      "datasourceTemplate": "github-releases",
+      "lookupNameTemplate": "cli/cli"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile(\\.([^/]+))?$"],
+      "matchStrings": [
+        "ARG GOTASK_VERSION=(?<currentValue>\\S+)"
+      ],
+      "depNameTemplate": "gotask",
+      "datasourceTemplate": "github-releases",
+      "lookupNameTemplate": "gotask/gotask"
     },
     {
       "fileMatch": ["\\.github/workflows/.*\\.yml"],
