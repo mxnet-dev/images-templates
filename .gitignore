@@ -3,6 +3,8 @@
 Thumbs.db
 .bundle
 
+**/archive
+
 *.code-workspace
 *.cer
 *.tfstate
