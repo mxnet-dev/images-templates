@@ -59,7 +59,8 @@
     },
     {
       "matchDepTypes": ["action"],
-      "addLabels": ["actions"]
+      "addLabels": ["actions"],
+      "ignoreTests": true
     },
     {
       "matchDepTypes": ["build"],
