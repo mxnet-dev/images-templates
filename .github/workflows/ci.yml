@@ -68,7 +68,7 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
       with:
-        terraform_version: v1.5.2
+        terraform_version: v1.5.3
 
     - name: Initialize Terraform
       working-directory: templates
